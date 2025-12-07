@@ -1,0 +1,451 @@
+import kagglehub
+ramontanoeiro_summer_olympic_medals_1986_2020_path = kagglehub.dataset_download('ramontanoeiro/summer-olympic-medals-1986-2020')
+
+print('Data source import complete.')
+
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import datetime
+
+%matplotlib inline
+
+medals = pd.read_csv('/content/Country_Medals.csv', encoding= 'unicode_escape')
+
+medals.head()
+
+medals.shape
+
+medals = medals.rename(columns = {'Year;Country_Code;Country_Name;Host_city;Host_country;Gold;Silver;Bronze': 'all_data'}, inplace = False)
+
+medals.head()
+
+'Year;Country_Code;Country_Name;Host_city;Host_country;Gold;Silver;Bronze'.split(';')
+
+'Year;Country_Code;Country_Name;Host_city;Host_country;Gold;Silver;Bronze'.split(';')[0]
+
+def year(x):
+    return x.split(';')[0]
+
+def Country_Code(x):
+    return x.split(';')[1]
+
+def Country_Name(x):
+    return x.split(';')[2]
+
+def Host_city(x):
+    return x.split(';')[3]
+
+def Host_country(x):
+    return x.split(';')[4]
+
+def Gold(x):
+    return x.split(';')[5]
+
+def Silver(x):
+    return x.split(';')[6]
+
+def Bronze(x):
+    return x.split(';')[7]
+
+medals['year']=medals['all_data'].apply(year)
+medals['Country_Code']=medals['all_data'].apply(Country_Code)
+medals['Country_Name']=medals['all_data'].apply(Country_Name)
+medals['Host_city']=medals['all_data'].apply(Host_city)
+medals['Host_country']=medals['all_data'].apply(Host_country)
+medals['Gold']=medals['all_data'].apply(Gold)
+medals['Silver']=medals['all_data'].apply(Silver)
+medals['Bronze']=medals['all_data'].apply(Bronze)
+
+medals.head()
+
+medals=medals.drop(['all_data'],axis=1)
+
+medals.head()
+
+medals.tail()
+
+medals.shape
+
+medals.dtypes
+
+medals['Gold']=medals['Gold'].astype(int)
+medals['Silver']=medals['Silver'].astype(int)
+medals['Bronze']=medals['Bronze'].astype(int)
+medals['Total']=medals['Gold']+medals['Silver']+medals['Bronze']
+
+medals.dtypes
+
+medals['Country_Name'].unique()
+
+medals.groupby('Country_Name')['year'].count().sort_values(ascending=False).head(10)
+
+medals.groupby('Country_Name')['year'].count().sort_values(ascending=False).tail(25)
+
+medals[medals['Country_Name']=='United States'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['year'], ascending=True)
+
+medals[medals['Country_Name']=='United States'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['Total'], ascending=False).head(1)
+
+medals[medals['Country_Name']=='United States'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['Total'], ascending=True).head(1)
+
+medals[medals['Country_Name']=='France'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['year'], ascending=True)
+
+medals[medals['Country_Name']=='France'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['Total'], ascending=False).head(1)
+
+medals[medals['Country_Name']=='France'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['Total'], ascending=True).head(1)
+
+medals[medals['Country_Name']=='Italy'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['year'], ascending=True)
+
+medals[medals['Country_Name']=='Italy'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['Total'], ascending=False).head(1)
+
+medals[medals['Country_Name']=='Great Britain'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['year'], ascending=True)
+
+medals[medals['Country_Name']=='Great Britain'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['Total'], ascending=False).head(1)
+
+medals[medals['Country_Name']=='Great Britain'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['Total'], ascending=True).head(1)
+
+medals[medals['Country_Name']=='Soviet Union'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['year'], ascending=True)
+
+medals[medals['Country_Name']=='Soviet Union'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['Total'], ascending=False).head(1)
+
+medals[medals['Country_Name']=='Soviet Union'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['Total'], ascending=True).head(1)
+
+medals[medals['Country_Name']=='Russia'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['year'], ascending=True)
+
+medals[medals['Country_Name']=='Russia'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['Total'], ascending=False).head(1)
+
+medals[medals['Country_Name']=='Russia'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['Total'], ascending=True).head(1)
+
+medals[medals['Country_Name']=='Germany'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['year'], ascending=True)
+
+medals[medals['Country_Name']=='Germany'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['Total'], ascending=False).head(1)
+
+medals[medals['Country_Name']=='Germany'].drop(['Country_Code','Country_Name','Host_city'],axis=1).sort_values(['Total'], ascending=True).head(1)
+
+medals.head()
+
+medals.isnull().sum()
+
+medals['year'].unique()
+
+medals_1896=medals[medals['year']=='1896'].drop(['year','Country_Code'],axis=1)
+medals_1896
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1896.sort_values(['Gold']),palette="Blues_d")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1896.sort_values(['Silver']),palette="Blues_d")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1896.sort_values(['Bronze']),palette="Blues_d")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1896.sort_values(['Total']),palette="Blues_d")
+
+medals_1900=medals[medals['year']=='1900'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1900
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1900.sort_values(['Gold']),palette="Oranges")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1900.sort_values(['Silver']),palette="Oranges")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1900.sort_values(['Bronze']),palette="Oranges")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1900.sort_values(['Total']),palette="Oranges")
+
+medals_1904=medals[medals['year']=='1904'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1904
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1904.sort_values(['Gold']),palette="gray_r")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1904.sort_values(['Silver']),palette="gray_r")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1904.sort_values(['Bronze']),palette="gray_r")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1904.sort_values(['Total']),palette="gray_r")
+
+medals_1908=medals[medals['year']=='1908'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1908
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1908.sort_values(['Gold']),palette="winter")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1908.sort_values(['Silver']),palette="winter")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1908.sort_values(['Bronze']),palette="winter")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1908.sort_values(['Total']),palette="winter")
+
+medals_1912=medals[medals['year']=='1912'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1912
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1912.sort_values(['Gold']),palette="summer_r")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1912.sort_values(['Silver']),palette="summer_r")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1912.sort_values(['Bronze']),palette="summer_r")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1912.sort_values(['Total']),palette="summer_r")
+
+medals_1920=medals[medals['year']=='1920'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1920
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1920.sort_values(['Gold']),palette="BuPu")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1920.sort_values(['Silver']),palette="BuPu")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1920.sort_values(['Bronze']),palette="BuPu")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1920.sort_values(['Total']),palette="BuPu")
+
+medals_1924=medals[medals['year']=='1924'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1924
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1924.sort_values(['Gold']),palette="Greens")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1924.sort_values(['Silver']),palette="Greens")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1924.sort_values(['Bronze']),palette="Greens")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1924.sort_values(['Total']),palette="Greens")
+
+medals_1928=medals[medals['year']=='1928'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1928
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1928.sort_values(['Gold']),palette="GnBu")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1928.sort_values(['Silver']),palette="GnBu")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1928.sort_values(['Bronze']),palette="GnBu")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1928.sort_values(['Total']),palette="GnBu")
+
+medals_1932=medals[medals['year']=='1932'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1932
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1932.sort_values(['Gold']),palette="Pastel1")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1932.sort_values(['Silver']),palette="Pastel1")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1932.sort_values(['Bronze']),palette="Pastel1")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1932.sort_values(['Total']),palette="Pastel1")
+
+medals_1936=medals[medals['year']=='1936'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1936
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1936.sort_values(['Gold']),palette="BuGn")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1936.sort_values(['Silver']),palette="BuGn")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1936.sort_values(['Bronze']),palette="BuGn")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1936.sort_values(['Total']),palette="BuGn")
+
+medals_1948=medals[medals['year']=='1948'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1948
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1948.sort_values(['Gold']),palette="OrRd")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1948.sort_values(['Silver']),palette="OrRd")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1948.sort_values(['Bronze']),palette="OrRd")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1948.sort_values(['Total']),palette="OrRd")
+
+medals_1952=medals[medals['year']=='1952'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1952
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1952.sort_values(['Gold']),palette="PRGn")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1952.sort_values(['Silver']),palette="PRGn")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1952.sort_values(['Bronze']),palette="PRGn")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1952.sort_values(['Total']),palette="PRGn")
+
+medals_1956=medals[medals['year']=='1956'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1956
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1956.sort_values(['Gold']),palette="Paired")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1956.sort_values(['Silver']),palette="Paired")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1956.sort_values(['Bronze']),palette="Paired")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1956.sort_values(['Total']),palette="Paired")
+
+medals_1960=medals[medals['year']=='1960'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1960
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1960.sort_values(['Gold']),palette="Pastel1")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1960.sort_values(['Silver']),palette="Pastel1")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1960.sort_values(['Bronze']),palette="Pastel1")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1960.sort_values(['Total']),palette="Pastel1")
+
+medals_1964=medals[medals['year']=='1964'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1964
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1964.sort_values(['Gold']),palette="Pastel2")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1964.sort_values(['Silver']),palette="Pastel2")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1964.sort_values(['Bronze']),palette="Pastel2")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1964.sort_values(['Total']),palette="Pastel2")
+
+medals_1968=medals[medals['year']=='1968'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1968
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1968.sort_values(['Gold']),palette="PiYG")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1968.sort_values(['Silver']),palette="PiYG")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1968.sort_values(['Bronze']),palette="PiYG")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1968.sort_values(['Total']),palette="PiYG")
+
+medals_1972=medals[medals['year']=='1972'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1972
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1972.sort_values(['Gold']),palette="PuBu")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1972.sort_values(['Silver']),palette="PuBu")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1972.sort_values(['Bronze']),palette="PuBu")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1972.sort_values(['Total']),palette="PuBu")
+
+medals_1976=medals[medals['year']=='1976'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1976
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1976.sort_values(['Gold']),palette="PuBuGn")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1976.sort_values(['Silver']),palette="PuBuGn")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1976.sort_values(['Bronze']),palette="PuBuGn")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1976.sort_values(['Total']),palette="PuBuGn")
+
+medals_1980=medals[medals['year']=='1980'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1980
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1980.sort_values(['Gold']),palette="PuBu_r")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1980.sort_values(['Silver']),palette="PuBu_r")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1980.sort_values(['Bronze']),palette="PuBu_r")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1980.sort_values(['Total']),palette="PuBu_r")
+
+medals_1984=medals[medals['year']=='1984'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1984
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1984.sort_values(['Gold']),palette="PuOr")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1984.sort_values(['Silver']),palette="PuOr")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1984.sort_values(['Bronze']),palette="PuOr")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1984.sort_values(['Total']),palette="PuOr")
+
+medals_1988=medals[medals['year']=='1988'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1988
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1988.sort_values(['Gold']),palette="winter")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1988.sort_values(['Silver']),palette="winter")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1988.sort_values(['Bronze']),palette="winter")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1988.sort_values(['Total']),palette="winter")
+
+medals_1992=medals[medals['year']=='1992'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1992
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1992.sort_values(['Gold']),palette="Purples")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1992.sort_values(['Silver']),palette="Purples")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1992.sort_values(['Bronze']),palette="Purples")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1992.sort_values(['Total']),palette="Purples")
+
+medals_1996=medals[medals['year']=='1996'].drop(['year','Country_Code'],axis=1).head(10)
+medals_1996
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_1996.sort_values(['Gold']),palette="RdBu")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_1996.sort_values(['Silver']),palette="RdBu")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_1996.sort_values(['Bronze']),palette="RdBu")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_1996.sort_values(['Total']),palette="RdBu")
+
+medals_2000=medals[medals['year']=='2000'].drop(['year','Country_Code'],axis=1).head(10)
+medals_2000
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_2000.sort_values(['Gold']),palette="RdGy")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_2000.sort_values(['Silver']),palette="RdGy")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_2000.sort_values(['Bronze']),palette="RdGy")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_2000.sort_values(['Total']),palette="RdGy")
+
+medals_2004=medals[medals['year']=='2004'].drop(['year','Country_Code'],axis=1).head(10)
+medals_2004
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_2004.sort_values(['Gold']),palette="RdPu")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_2004.sort_values(['Silver']),palette="RdPu")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_2004.sort_values(['Bronze']),palette="RdPu")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_2004.sort_values(['Total']),palette="RdPu")
+
+medals_2008=medals[medals['year']=='2008'].drop(['year','Country_Code'],axis=1).head(10)
+medals_2008
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_2008.sort_values(['Gold']),palette="RdYlBu")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_2008.sort_values(['Silver']),palette="RdYlBu")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_2008.sort_values(['Bronze']),palette="RdYlBu")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_2008.sort_values(['Total']),palette="RdYlBu")
+
+medals_2012=medals[medals['year']=='2012'].drop(['year','Country_Code'],axis=1).head(10)
+medals_2012
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_2012.sort_values(['Gold']),palette="RdYlGn")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_2012.sort_values(['Silver']),palette="RdYlGn")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_2012.sort_values(['Bronze']),palette="RdYlGn")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_2012.sort_values(['Total']),palette="RdYlGn")
+
+medals_2016=medals[medals['year']=='2016'].drop(['year','Country_Code'],axis=1).head(10)
+medals_2016
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_2016.sort_values(['Gold']),palette="Reds")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_2016.sort_values(['Silver']),palette="Reds")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_2016.sort_values(['Bronze']),palette="Reds")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_2016.sort_values(['Total']),palette="Reds")
+
+medals_2020=medals[medals['year']=='2020'].drop(['year','Country_Code'],axis=1).head(10)
+medals_2020
+
+sns.barplot(y='Country_Name', x='Gold' , data=medals_2020.sort_values(['Gold']),palette="Set1")
+
+sns.barplot(y='Country_Name', x='Silver' , data=medals_2020.sort_values(['Silver']),palette="Set1")
+
+sns.barplot(y='Country_Name', x='Bronze' , data=medals_2020.sort_values(['Bronze']),palette="Set1")
+
+sns.barplot(y='Country_Name', x='Total' , data=medals_2020.sort_values(['Total']),palette="Set1")
+
+Thank you very much
